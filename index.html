@@ -201,6 +201,98 @@
 
   .big-hearts { font-size: 60px; animation: bob 1.8s ease-in-out infinite; }
 
+  /* Phase transitions inside celebration */
+  .celebration { overflow-y: auto; padding: 30px 20px; }
+
+  .celeb-phase {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: opacity 0.45s ease, transform 0.45s ease;
+  }
+  #celebPhase2 { opacity: 0; transform: scale(0.95); display: none; }
+
+  /* "Wanna know why?" prompt */
+  .why-prompt {
+    margin-top: 30px;
+    background: rgba(255, 255, 255, 0.7);
+    border: 2px dashed #ffa6c4;
+    border-radius: 22px;
+    padding: 22px 26px;
+    max-width: 520px;
+  }
+  .why-question {
+    font-size: 19px;
+    color: #6b3a4e;
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+  .why-btn {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 17px;
+    padding: 13px 30px;
+    background: linear-gradient(135deg, #ff7eb6, #ff4d94);
+    color: white;
+    border: none;
+    border-radius: 999px;
+    box-shadow: 0 8px 20px rgba(255, 77, 148, 0.45);
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  .why-btn:hover {
+    transform: scale(1.07);
+    box-shadow: 0 12px 26px rgba(255, 77, 148, 0.6);
+  }
+
+  /* Confession panel */
+  .confession-title {
+    font-family: 'Caveat', cursive;
+    font-size: 56px;
+    color: #d6336c;
+    margin-bottom: 10px;
+    line-height: 1;
+  }
+  .confession-sub {
+    font-size: 17px;
+    color: #a55477;
+    margin-bottom: 22px;
+  }
+  .confession {
+    font-size: 18px;
+    line-height: 1.75;
+    max-width: 560px;
+    color: #5e2e44;
+    background: rgba(255, 255, 255, 0.85);
+    padding: 28px 30px;
+    border-radius: 22px;
+    border: 2px dashed #ffa6c4;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 16px 40px rgba(255, 120, 170, 0.25);
+    text-align: left;
+  }
+  .confession em {
+    color: #d6336c;
+    font-style: italic;
+    font-weight: 600;
+  }
+  .confession-sign {
+    margin-top: 18px;
+    font-family: 'Caveat', cursive;
+    font-size: 28px;
+    color: #d6336c;
+    text-align: center;
+  }
+
+  @media (max-width: 560px) {
+    .confession-title { font-size: 44px; }
+    .confession { font-size: 16px; padding: 22px 20px; }
+    .why-question { font-size: 17px; }
+  }
+
   /* Diagonal SORRY + bandage sticker */
   .sorry-stamp {
     position: fixed;
@@ -345,12 +437,42 @@
 
 <!-- Celebration screen -->
 <div class="celebration" id="celebration">
-  <div class="big-hearts">💖🌸💖🌷💖</div>
-  <h2>Thank you mini doc Joe!! 🥹</h2>
-  <p>You just saved a patient today (me) 🩺<br>
-     My recovery is at 100% — heart rate stable, mood: blooming 🌷<br>
-     I promise I won't mess up again, Joe. I'll do better. Pinky promise 🤙💕</p>
-  <div style="font-size: 50px;">🐱 🌸 🐱 🌷 🐱</div>
+
+  <!-- Phase 1: Thank you + the "wanna know why?" prompt -->
+  <div class="celeb-phase" id="celebPhase1">
+    <div class="big-hearts">💖🌸💖🌷💖</div>
+    <h2>Thank you mini doc Joe!! 🥹</h2>
+    <p>You just saved a patient today (me) 🩺<br>
+       My recovery is at 100% — heart rate stable, mood: blooming 🌷<br>
+       I promise I won't mess up again, Joe. I'll do better. Pinky promise 🤙💕</p>
+    <div style="font-size: 50px;">🐱 🌸 🐱 🌷 🐱</div>
+
+    <div class="why-prompt">
+      <p class="why-question">wait... wanna know why I was actually apologizing in the first place? 🥺</p>
+      <button class="why-btn" id="whyBtn">Yes, tell me 💕</button>
+    </div>
+  </div>
+
+  <!-- Phase 2: The confession -->
+  <div class="celeb-phase" id="celebPhase2">
+    <div class="big-hearts">💕</div>
+    <h2 class="confession-title">Okay, real talk...</h2>
+    <p class="confession-sub">deep breath 🫧</p>
+    <div class="confession">
+      These past few days... something's been different. I think I've actually started liking you, Joe 🥺<br><br>
+
+      I see a lot of people every day — but my eyes just kept finding their way back to you. You're so calm, so charming, it's honestly a bit unfair.<br><br>
+
+      But you really had me the moment you actually <em>listened</em> to me. Properly listened. Paid attention to every single word I said. Most people don't do that anymore — and you do it without even trying.<br><br>
+
+      And on top of all that... you're somehow even cuter in real life than in those pictures (yeah... I've been through your Insta 🙈).<br><br>
+
+      So that's why I was so scared of messing this up.<br>
+      Because I really, really like you, Joe 💕
+    </div>
+    <div class="confession-sign">— yours, kinda hopelessly 🩺💗</div>
+  </div>
+
 </div>
 
 <script>
@@ -400,6 +522,26 @@
     celebration.classList.add('show');
     // Extra confetti burst
     for (let i = 0; i < 60; i++) setTimeout(spawnFloater, i * 40);
+  });
+
+  // ---- "Wanna know why?" -> reveal confession ----
+  const whyBtn   = document.getElementById('whyBtn');
+  const phase1   = document.getElementById('celebPhase1');
+  const phase2   = document.getElementById('celebPhase2');
+
+  whyBtn.addEventListener('click', () => {
+    phase1.style.opacity = '0';
+    phase1.style.transform = 'scale(0.92)';
+    setTimeout(() => {
+      phase1.style.display = 'none';
+      phase2.style.display = 'flex';
+      // Force reflow so the transition runs
+      void phase2.offsetWidth;
+      phase2.style.opacity = '1';
+      phase2.style.transform = 'scale(1)';
+      // Extra hearts shower for the reveal
+      for (let i = 0; i < 40; i++) setTimeout(spawnFloater, i * 50);
+    }, 450);
   });
 
   // ---- NO: dodge + cycle message + grow yes button ----
