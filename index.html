@@ -140,10 +140,19 @@
   .no {
     background: linear-gradient(135deg, #ffc4d9, #ffa6c4);
     color: #a23867;
-    box-shadow: 0 6px 14px rgba(255, 158, 193, 0.4);
+    box-shadow: 0 6px 14px rgba(255, 158, 193, 0.5);
     position: relative;
     z-index: 60;
-    transition: top 0.28s ease, left 0.28s ease, transform 0.18s ease;
+    transition: top 0.35s cubic-bezier(.34, 1.4, .64, 1),
+                left 0.35s cubic-bezier(.34, 1.4, .64, 1),
+                transform 0.18s ease;
+    animation: noPulse 1.6s ease-in-out infinite;
+  }
+
+  @keyframes noPulse {
+    0%, 100% { box-shadow: 0 6px 14px rgba(255, 158, 193, 0.5); }
+    50%      { box-shadow: 0 8px 24px rgba(255, 90, 150, 0.85),
+                            0 0 0 6px rgba(255, 158, 193, 0.25); }
   }
 
   .clicks {
@@ -394,30 +403,58 @@
   });
 
   // ---- NO: dodge + cycle message + grow yes button ----
+  let noInitialized = false;
+
   function moveNoButton() {
-    const margin = 14;
-    const w = noBtn.offsetWidth  || 100;
-    const h = noBtn.offsetHeight || 50;
-    // Always keep it fully on-screen (clamp into viewport)
-    const maxX = Math.max(margin, window.innerWidth  - w - margin);
-    const maxY = Math.max(margin, window.innerHeight - h - margin);
-    const x = margin + Math.random() * Math.max(0, (maxX - margin));
-    const y = margin + Math.random() * Math.max(0, (maxY - margin));
-    noBtn.style.position = 'fixed';
+    const margin = 18;
+    // Use visualViewport when available (correct on mobile with URL bar)
+    const vw = (window.visualViewport && window.visualViewport.width)  || window.innerWidth;
+    const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+    const w = noBtn.offsetWidth  || 110;
+    const h = noBtn.offsetHeight || 52;
+
+    // Extra-safe padding from edges so it can NEVER be cut off
+    const padX = Math.max(margin, vw * 0.04);
+    const padY = Math.max(margin, vh * 0.08);
+
+    // On the first move, lock current on-screen position as fixed so the
+    // transition animates smoothly to the new spot (no teleport)
+    if (!noInitialized) {
+      const r = noBtn.getBoundingClientRect();
+      noBtn.style.position = 'fixed';
+      noBtn.style.left = r.left + 'px';
+      noBtn.style.top  = r.top  + 'px';
+      noBtn.style.margin = '0';
+      noInitialized = true;
+      // Force a reflow so the transition kicks in on the next set
+      void noBtn.offsetWidth;
+    }
+
+    const maxX = Math.max(padX, vw - w - padX);
+    const maxY = Math.max(padY, vh - h - padY);
+    const x = padX + Math.random() * Math.max(0, (maxX - padX));
+    const y = padY + Math.random() * Math.max(0, (maxY - padY));
+
     noBtn.style.left = x + 'px';
     noBtn.style.top  = y + 'px';
     noBtn.style.zIndex = '60';
-    noBtn.style.display = 'inline-block'; // never hide it
+    // Never let it become invisible
+    noBtn.style.display    = 'inline-block';
+    noBtn.style.visibility = 'visible';
+    noBtn.style.opacity    = '1';
   }
 
-  // If the viewport changes (rotate phone), keep it on-screen
-  window.addEventListener('resize', () => {
-    if (noBtn.style.position === 'fixed') moveNoButton();
-  });
+  // If the viewport changes (rotate phone, browser chrome shows/hides), keep it on-screen
+  window.addEventListener('resize', () => { if (noInitialized) moveNoButton(); });
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', () => { if (noInitialized) moveNoButton(); });
+  }
 
-  // Dodge on hover too (so she can barely click it)
-  noBtn.addEventListener('mouseenter', moveNoButton);
-  noBtn.addEventListener('touchstart', moveNoButton, { passive: true });
+  // Dodge on hover ONLY for devices that actually hover (desktop mouse).
+  // On touch devices the dodge happens on click so the tap is always registered first.
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    noBtn.addEventListener('pointerenter', moveNoButton);
+  }
 
   noBtn.addEventListener('click', (e) => {
     e.preventDefault();
