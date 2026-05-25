@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Please Forgive Me, Mini Doc 🩺💕</title>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Modak&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -142,7 +142,8 @@
     color: #a23867;
     box-shadow: 0 6px 14px rgba(255, 158, 193, 0.4);
     position: relative;
-    transition: top 0.25s ease, left 0.25s ease, transform 0.18s ease;
+    z-index: 60;
+    transition: top 0.28s ease, left 0.28s ease, transform 0.18s ease;
   }
 
   .clicks {
@@ -191,6 +192,47 @@
 
   .big-hearts { font-size: 60px; animation: bob 1.8s ease-in-out infinite; }
 
+  /* Diagonal SORRY + bandage sticker */
+  .sorry-stamp {
+    position: fixed;
+    top: clamp(8px, 3vh, 30px);
+    right: clamp(-10px, 1vw, 24px);
+    z-index: 15;
+    pointer-events: none;
+    transform: rotate(-14deg);
+    animation: wobble 4s ease-in-out infinite;
+    filter: drop-shadow(6px 8px 14px rgba(214, 51, 108, 0.25));
+  }
+
+  @keyframes wobble {
+    0%, 100% { transform: rotate(-14deg) translateY(0); }
+    50%      { transform: rotate(-12deg) translateY(-6px); }
+  }
+
+  .sorry-text {
+    font-family: 'Modak', cursive;
+    font-size: clamp(56px, 12vw, 120px);
+    color: #ffffff;
+    -webkit-text-stroke: 4px #d6336c;
+    text-shadow:
+      6px 6px 0 #ff7eb6,
+      8px 8px 0 #d6336c,
+      10px 10px 22px rgba(214, 51, 108, 0.35);
+    letter-spacing: 4px;
+    line-height: 0.9;
+    margin: 0;
+  }
+
+  .bandage {
+    position: absolute;
+    top: 38%;
+    left: -16%;
+    width: clamp(120px, 30vw, 230px);
+    height: auto;
+    transform: rotate(22deg);
+    filter: drop-shadow(3px 3px 6px rgba(120, 60, 80, 0.35));
+  }
+
   /* Tiny stethoscope corners */
   .corner {
     position: fixed;
@@ -217,6 +259,30 @@
 <div class="corner tr">🌷</div>
 <div class="corner bl">🌺</div>
 <div class="corner br">🌹</div>
+
+<!-- Diagonal SORRY bubble sticker with a band-aid across it -->
+<div class="sorry-stamp" aria-hidden="true">
+  <div class="sorry-text">SORRY</div>
+  <svg class="bandage" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+    <!-- Outer bandage (peach) -->
+    <rect x="6" y="14" width="188" height="32" rx="9" ry="9"
+          fill="#ffd1a3" stroke="#a8714a" stroke-width="2.5"/>
+    <!-- Gauze pad -->
+    <rect x="70" y="20" width="60" height="20" rx="3" ry="3"
+          fill="#fff4e3" stroke="#a8714a" stroke-width="1.8"/>
+    <!-- Stitch dots on the pad -->
+    <circle cx="82"  cy="30" r="2" fill="#a8714a"/>
+    <circle cx="100" cy="30" r="2" fill="#a8714a"/>
+    <circle cx="118" cy="30" r="2" fill="#a8714a"/>
+    <!-- Side perforation dots -->
+    <circle cx="22" cy="22" r="1.6" fill="#a8714a"/>
+    <circle cx="22" cy="30" r="1.6" fill="#a8714a"/>
+    <circle cx="22" cy="38" r="1.6" fill="#a8714a"/>
+    <circle cx="178" cy="22" r="1.6" fill="#a8714a"/>
+    <circle cx="178" cy="30" r="1.6" fill="#a8714a"/>
+    <circle cx="178" cy="38" r="1.6" fill="#a8714a"/>
+  </svg>
+</div>
 
 <div class="card">
   <!-- Hello Kitty SVG (cute little doctor version) -->
@@ -329,14 +395,25 @@
 
   // ---- NO: dodge + cycle message + grow yes button ----
   function moveNoButton() {
-    const maxX = window.innerWidth  - noBtn.offsetWidth  - 20;
-    const maxY = window.innerHeight - noBtn.offsetHeight - 20;
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
+    const margin = 14;
+    const w = noBtn.offsetWidth  || 100;
+    const h = noBtn.offsetHeight || 50;
+    // Always keep it fully on-screen (clamp into viewport)
+    const maxX = Math.max(margin, window.innerWidth  - w - margin);
+    const maxY = Math.max(margin, window.innerHeight - h - margin);
+    const x = margin + Math.random() * Math.max(0, (maxX - margin));
+    const y = margin + Math.random() * Math.max(0, (maxY - margin));
     noBtn.style.position = 'fixed';
     noBtn.style.left = x + 'px';
     noBtn.style.top  = y + 'px';
+    noBtn.style.zIndex = '60';
+    noBtn.style.display = 'inline-block'; // never hide it
   }
+
+  // If the viewport changes (rotate phone), keep it on-screen
+  window.addEventListener('resize', () => {
+    if (noBtn.style.position === 'fixed') moveNoButton();
+  });
 
   // Dodge on hover too (so she can barely click it)
   noBtn.addEventListener('mouseenter', moveNoButton);
