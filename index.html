@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Please Forgive Me, Mini Doc 🩺💕</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Quicksand', sans-serif;
+    background: linear-gradient(135deg, #fff5f8 0%, #ffe4ec 50%, #ffd6e7 100%);
+    color: #6b3a4e;
+  }
+
+  /* Floating decorations */
+  .floater {
+    position: fixed;
+    pointer-events: none;
+    font-size: 28px;
+    opacity: 0.8;
+    animation: floatUp linear infinite;
+    z-index: 1;
+  }
+
+  @keyframes floatUp {
+    0%   { transform: translateY(110vh) rotate(0deg);   opacity: 0; }
+    10%  { opacity: 0.9; }
+    90%  { opacity: 0.9; }
+    100% { transform: translateY(-15vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* Sparkles */
+  @keyframes sparkle {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50%      { transform: scale(1.3); opacity: 1; }
+  }
+
+  .card {
+    position: relative;
+    z-index: 10;
+    max-width: 600px;
+    margin: 4vh auto;
+    padding: 40px 36px 36px;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(8px);
+    border: 3px dashed #ff9ec1;
+    border-radius: 28px;
+    box-shadow: 0 20px 50px rgba(255, 158, 193, 0.35),
+                0 0 0 6px rgba(255, 255, 255, 0.5) inset;
+    text-align: center;
+  }
+
+  .hello-kitty {
+    width: 130px;
+    height: 130px;
+    margin: -100px auto 8px;
+    display: block;
+    filter: drop-shadow(0 6px 14px rgba(255, 120, 170, 0.35));
+    animation: bob 3s ease-in-out infinite;
+  }
+
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
+  }
+
+  h1 {
+    font-family: 'Caveat', cursive;
+    font-size: 44px;
+    color: #d6336c;
+    margin-bottom: 6px;
+    line-height: 1.1;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: #a55477;
+    margin-bottom: 20px;
+  }
+
+  .message {
+    font-size: 19px;
+    line-height: 1.55;
+    color: #6b3a4e;
+    min-height: 110px;
+    padding: 16px 18px;
+    background: linear-gradient(135deg, #fff0f6, #ffe0ec);
+    border-radius: 18px;
+    border: 2px solid #ffc7dd;
+    margin-bottom: 26px;
+    transition: opacity 0.4s ease;
+  }
+
+  .cats {
+    font-size: 28px;
+    letter-spacing: 8px;
+    margin-bottom: 18px;
+    animation: sparkle 2.4s ease-in-out infinite;
+  }
+
+  .buttons {
+    position: relative;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+  }
+
+  button {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    padding: 14px 34px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    color: white;
+  }
+
+  .yes {
+    background: linear-gradient(135deg, #ff7eb6, #ff4d94);
+    box-shadow: 0 8px 20px rgba(255, 77, 148, 0.45);
+  }
+
+  .yes:hover {
+    transform: scale(1.12);
+    box-shadow: 0 12px 26px rgba(255, 77, 148, 0.6);
+  }
+
+  .yes.giant { transform: scale(1.3); }
+  .yes.huge  { transform: scale(1.6); }
+  .yes.mega  { transform: scale(2.0); }
+
+  .no {
+    background: linear-gradient(135deg, #ffc4d9, #ffa6c4);
+    color: #a23867;
+    box-shadow: 0 6px 14px rgba(255, 158, 193, 0.4);
+    position: relative;
+    transition: top 0.25s ease, left 0.25s ease, transform 0.18s ease;
+  }
+
+  .clicks {
+    margin-top: 18px;
+    font-size: 13px;
+    color: #c97aa0;
+    font-style: italic;
+  }
+
+  /* Forgiveness screen */
+  .celebration {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: radial-gradient(circle at center, #ffe4ec 0%, #ffb6d1 100%);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .celebration.show { display: flex; animation: zoomIn 0.6s ease; }
+
+  @keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.7); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .celebration h2 {
+    font-family: 'Caveat', cursive;
+    font-size: 64px;
+    color: #d6336c;
+    margin-bottom: 14px;
+    text-shadow: 0 4px 16px rgba(255, 120, 170, 0.4);
+  }
+
+  .celebration p {
+    font-size: 22px;
+    color: #6b3a4e;
+    max-width: 600px;
+    line-height: 1.5;
+    margin-bottom: 24px;
+  }
+
+  .big-hearts { font-size: 60px; animation: bob 1.8s ease-in-out infinite; }
+
+  /* Tiny stethoscope corners */
+  .corner {
+    position: fixed;
+    font-size: 36px;
+    opacity: 0.55;
+    z-index: 2;
+    animation: sparkle 3s ease-in-out infinite;
+  }
+  .corner.tl { top: 14px; left: 18px; }
+  .corner.tr { top: 14px; right: 18px; }
+  .corner.bl { bottom: 14px; left: 18px; }
+  .corner.br { bottom: 14px; right: 18px; }
+
+  @media (max-width: 640px) {
+    h1 { font-size: 34px; }
+    .message { font-size: 17px; }
+    button { font-size: 16px; padding: 12px 26px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="corner tl">🌸</div>
+<div class="corner tr">🌷</div>
+<div class="corner bl">🌺</div>
+<div class="corner br">🌹</div>
+
+<div class="card">
+  <!-- Hello Kitty SVG (cute little doctor version) -->
+  <svg class="hello-kitty" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- Ears -->
+    <ellipse cx="55" cy="55" rx="22" ry="26" fill="#ffffff" stroke="#3a2530" stroke-width="2.5" transform="rotate(-20 55 55)"/>
+    <ellipse cx="145" cy="55" rx="22" ry="26" fill="#ffffff" stroke="#3a2530" stroke-width="2.5" transform="rotate(20 145 55)"/>
+    <!-- Head -->
+    <ellipse cx="100" cy="110" rx="72" ry="60" fill="#ffffff" stroke="#3a2530" stroke-width="2.5"/>
+    <!-- Bow (pink) -->
+    <path d="M 138 70 Q 158 58 168 76 Q 158 88 138 80 Z" fill="#ff7eb6" stroke="#3a2530" stroke-width="2"/>
+    <path d="M 138 80 Q 158 92 168 80 Q 158 70 138 70 Z" fill="#ff7eb6" stroke="#3a2530" stroke-width="2"/>
+    <circle cx="148" cy="78" r="5" fill="#ff4d94"/>
+    <!-- Eyes -->
+    <ellipse cx="78" cy="110" rx="5" ry="7" fill="#2a1a22"/>
+    <ellipse cx="122" cy="110" rx="5" ry="7" fill="#2a1a22"/>
+    <!-- Nose -->
+    <ellipse cx="100" cy="124" rx="6" ry="4" fill="#ffd54a"/>
+    <!-- Whiskers -->
+    <line x1="40" y1="118" x2="68" y2="120" stroke="#3a2530" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="40" y1="128" x2="68" y2="128" stroke="#3a2530" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="40" y1="138" x2="68" y2="136" stroke="#3a2530" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="160" y1="118" x2="132" y2="120" stroke="#3a2530" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="160" y1="128" x2="132" y2="128" stroke="#3a2530" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="160" y1="138" x2="132" y2="136" stroke="#3a2530" stroke-width="1.8" stroke-linecap="round"/>
+    <!-- Cheek blush -->
+    <circle cx="62" cy="138" r="6" fill="#ffc4d9" opacity="0.7"/>
+    <circle cx="138" cy="138" r="6" fill="#ffc4d9" opacity="0.7"/>
+    <!-- Tiny stethoscope -->
+    <path d="M 70 168 Q 100 195 130 168" stroke="#d6336c" stroke-width="3" fill="none"/>
+    <circle cx="130" cy="168" r="6" fill="#ffe4ec" stroke="#d6336c" stroke-width="2"/>
+  </svg>
+
+  <h1>Hey Mini Doc Joe 🩺</h1>
+  <p class="subtitle">a tiny apology page made just for you, Joe 💕</p>
+
+  <div class="cats">🐱 🌸 🐾 🌷 🐈</div>
+
+  <div class="message" id="message">
+    Hey mini doc Joe... please forgive me? 🥺<br>
+    I know I messed up and I'm really really sorry.
+  </div>
+
+  <div class="buttons">
+    <button class="yes" id="yesBtn">Yes 💖</button>
+    <button class="no" id="noBtn">No 😢</button>
+  </div>
+
+  <div class="clicks" id="clicks"></div>
+</div>
+
+<!-- Celebration screen -->
+<div class="celebration" id="celebration">
+  <div class="big-hearts">💖🌸💖🌷💖</div>
+  <h2>Thank you mini doc Joe!! 🥹</h2>
+  <p>You just saved a patient today (me) 🩺<br>
+     My recovery is at 100% — heart rate stable, mood: blooming 🌷<br>
+     I promise I won't mess up again, Joe. I'll do better. Pinky promise 🤙💕</p>
+  <div style="font-size: 50px;">🐱 🌸 🐱 🌷 🐱</div>
+</div>
+
+<script>
+  // ---- Floating background decorations ----
+  const symbols = ['🌸','🌷','🌺','🌹','💐','🐱','🐈','🐾','💕','💖','🎀','🍓'];
+  function spawnFloater() {
+    const f = document.createElement('div');
+    f.className = 'floater';
+    f.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    f.style.left = Math.random() * 100 + 'vw';
+    f.style.fontSize = (20 + Math.random() * 24) + 'px';
+    const dur = 8 + Math.random() * 10;
+    f.style.animationDuration = dur + 's';
+    f.style.animationDelay = '-' + Math.random() * dur + 's';
+    document.body.appendChild(f);
+    setTimeout(() => f.remove(), dur * 1000);
+  }
+  for (let i = 0; i < 18; i++) spawnFloater();
+  setInterval(spawnFloater, 700);
+
+  // ---- Sweet apology messages cycle on each "No" ----
+  const messages = [
+    "Hey mini doc Joe... please forgive me? 🥺<br>I know I messed up and I'm really really sorry.",
+    "Mini doc 🩺 if you don't forgive me Joe, I think I might fall sick...<br>and then who's gonna treat me? 😷",
+    "Doctorrr Joeee 😭 my heart rate is rising and the only cure is your forgiveness.<br>It's literally written in the textbook 📖",
+    "Even Hello Kitty is begging on my behalf 🎀<br>look at her little stethoscope. she agrees with me, Joe. forgive me?",
+    "I'll bring you flowers 🌷🌸🌺<br>I'll bring you cats 🐱🐈<br>I'll bring you snacks 🍓<br>just pleaseee don't stay mad Joe 🥺",
+    "Mini doc Joe, the diagnosis is clear:<br>chronic missing-you syndrome 💔<br>prescription: one (1) 'okay fine i forgive you'",
+    "If you say no one more time I'm gonna develop a fever 🤒<br>and YOU'LL have to write the prescription, Joe. cruel honestly.",
+    "Please please please please Joe 🥹<br>I'll do better. I promise. I'll listen. I'll be sweeter. just forgive me?",
+    "Look at how hard the cats are working down there 🐱🐾🐱<br>they all signed a petition for you, Joe. all paw-prints. very official.",
+    "Dr. Joe 🩺 you took an oath remember? to heal people 😌<br>well guess what. I need healing. emotional healing. start now plz 💕",
+    "mini doc Joeee 🥺 even the flowers are wilting cuz you're mad<br>they need sunlight AND your forgiveness to bloom again 🌷",
+    "mini doc joe 🩺💕 I miss you already.<br>this page won't let you leave until you forgive me. sorry not sorry 🌸"
+  ];
+  let msgIdx = 0;
+  let noClicks = 0;
+
+  const msgEl = document.getElementById('message');
+  const yesBtn = document.getElementById('yesBtn');
+  const noBtn  = document.getElementById('noBtn');
+  const clicksEl = document.getElementById('clicks');
+  const celebration = document.getElementById('celebration');
+
+  // ---- YES: end the loop ----
+  yesBtn.addEventListener('click', () => {
+    celebration.classList.add('show');
+    // Extra confetti burst
+    for (let i = 0; i < 60; i++) setTimeout(spawnFloater, i * 40);
+  });
+
+  // ---- NO: dodge + cycle message + grow yes button ----
+  function moveNoButton() {
+    const maxX = window.innerWidth  - noBtn.offsetWidth  - 20;
+    const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
+    noBtn.style.position = 'fixed';
+    noBtn.style.left = x + 'px';
+    noBtn.style.top  = y + 'px';
+  }
+
+  // Dodge on hover too (so she can barely click it)
+  noBtn.addEventListener('mouseenter', moveNoButton);
+  noBtn.addEventListener('touchstart', moveNoButton, { passive: true });
+
+  noBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    noClicks++;
+    msgIdx = (msgIdx + 1) % messages.length;
+    msgEl.style.opacity = 0;
+    setTimeout(() => {
+      msgEl.innerHTML = messages[msgIdx];
+      msgEl.style.opacity = 1;
+    }, 200);
+
+    // Grow the Yes button to tempt her 💕
+    if (noClicks === 2) yesBtn.classList.add('giant');
+    if (noClicks === 4) yesBtn.classList.add('huge');
+    if (noClicks >= 6)  yesBtn.classList.add('mega');
+
+    if (noClicks >= 3) {
+      clicksEl.textContent = `(no clicked ${noClicks} times... mini doc Joe pleaseee 🥺)`;
+    }
+
+    moveNoButton();
+  });
+</script>
+</body>
+</html>
